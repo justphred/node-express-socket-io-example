@@ -9,23 +9,20 @@ var app = express();
 var server = http.createServer(app);
 var io = socketIO(server);
 
+const {generateMessage} = require("./utils/message.js");
+
 app.use(express.static(publicPath));
 
 io.on("connection", (socket) => {
   console.log("A new user just connected");
 
   // Send a welcome message to each users as they connect to the server.
-  socket.emit("newMessage", {
-    from: "Admin",
-    text: "Wilkomen to our chatter apptung!",
-    createdAt: new Date().getTime()
-  });
-  // Let (other) connected users know that just joined the chatter.
-  socket.broadcast.emit("newMessage", {
-    from: "Admin",
-    text: "Someone just joined the chatter ...",
-    createdAt: new Date().getTime()
-  });
+  // { from: "Admin", text: "Wilkomen to our chatter apptung!", createdAt: new Date().getTime()}
+  socket.emit("newMessage", generateMessage("Admin", "Wilkomen to our chatter app-tung!")
+  );
+  // Let (other) connected users know that someone just joined the chatter.
+  // {from: "Admin", text: "Someone just joined the chatter ...", createdAt: new Date().getTime()}
+  socket.broadcast.emit("newMessage", generateMessage("Admin", "Someone just joined the chatter ..."));
 
   // From user to server ... "here's a new message to distribute to others"
   socket.on("createMessage", (msg) => {
@@ -35,11 +32,9 @@ io.on("connection", (socket) => {
     console.log("event:createMessage ", date, msg);
 
     // Distribute the new/incoming message to all connected users.
-    io.emit("newMessage", {
-      from: msg.from,
-      text: msg.text,
-      createdAt: date.getTime()
-    });
+    // {from: msg.from, text: msg.text, createdAt: date.getTime()}
+    io.emit("newMessage", generateMessage(msg.from, msg.text));
+
     // Distribute to all but the receiving socket the newly received message.
     // socket.broadcast.emit("newMessage", {
     //   from: msg.from,
