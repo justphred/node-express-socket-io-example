@@ -14,25 +14,26 @@ app.use(express.static(publicPath));
 io.on("connection", (socket) => {
   console.log("A new user just connected");
 
-  // Distribute a new message to all connected users.
-  socket.emit("newMessage", {
-    from: "Tom Thumb",
-    text: "Where's the pie?",
-    createdAt: 1234
-  });
+  // Send a new message to each users as they connect to the server.
+  // socket.emit("newMessage", {
+  //   from: "Tom Thumb",
+  //   text: "Where's the pie?",
+  //   createdAt: 1234
+  // });
 
   // From user to server ... "here's a new message to distribute to others"
   socket.on("createMessage", (msg) => {
     // Expect a "from" identifier and a text string containing the message.
     // We'll need to generate a timestamp to add to the message before it gets distributed
     var date = new Date();
-    // date.getHours();
-    // date.getMinutes();
-    // date.getSeconds();
-    // date.getFullYear();
-    // date.getMonth();
-    // date.getDate();
     console.log("event:createMessage ", date, msg);
+
+    // Distribute the new/incoming message to all connected users.
+    io.emit("newMessage", {
+      from: msg.from,
+      text: msg.text,
+      createdAt: date.getTime()
+    });
   });
 
   socket.on("disconnect", () => {
