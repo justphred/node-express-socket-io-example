@@ -15,16 +15,7 @@
 
 <!-- ====================================================================== -->
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io(); // Initiating a request from client to server.
-
-    socket.on("connect", () => {
-      console.log("Just connected to the server ...");
-    });
-    socket.on("disconnect", () => {
-      console.log("Just got disconnected from the server ...")
-    })
-  </script>
+  <script src="/js/index.js"></script>
 </body>
 
 </html>
