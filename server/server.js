@@ -14,12 +14,18 @@ app.use(express.static(publicPath));
 io.on("connection", (socket) => {
   console.log("A new user just connected");
 
-  // Send a new message to each users as they connect to the server.
-  // socket.emit("newMessage", {
-  //   from: "Tom Thumb",
-  //   text: "Where's the pie?",
-  //   createdAt: 1234
-  // });
+  // Send a welcome message to each users as they connect to the server.
+  socket.emit("newMessage", {
+    from: "Admin",
+    text: "Wilkomen to our chatter apptung!",
+    createdAt: new Date().getTime()
+  });
+  // Let (other) connected users know that just joined the chatter.
+  socket.broadcast.emit("newMessage", {
+    from: "Admin",
+    text: "Someone just joined the chatter ...",
+    createdAt: new Date().getTime()
+  });
 
   // From user to server ... "here's a new message to distribute to others"
   socket.on("createMessage", (msg) => {
@@ -34,6 +40,12 @@ io.on("connection", (socket) => {
       text: msg.text,
       createdAt: date.getTime()
     });
+    // Distribute to all but the receiving socket the newly received message.
+    // socket.broadcast.emit("newMessage", {
+    //   from: msg.from,
+    //   text: msg.text,
+    //   createdAt: date.getTime()
+    // });
   });
 
   socket.on("disconnect", () => {
