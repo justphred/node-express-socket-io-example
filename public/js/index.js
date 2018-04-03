@@ -18,3 +18,10 @@ socket.on("newMessage", function(email) {
 socket.on("disconnect", function () {
   console.log("Just got disconnected from the server ...")
 });
+
+socket.emit("createMessage", {
+  to: "Mary's Lamb",
+  text: "Hey, my fleece is white as snow!"
+}, function (serverResp) {
+  console.log("Message Ack'd by Server:", serverResp);
+});

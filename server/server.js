@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
   socket.broadcast.emit("newMessage", generateMessage("Admin", "Someone just joined the chatter ..."));
 
   // From user to server ... "here's a new message to distribute to others"
-  socket.on("createMessage", (msg) => {
+  socket.on("createMessage", (msg, callback) => {
     // Expect a "from" identifier and a text string containing the message.
     // We'll need to generate a timestamp to add to the message before it gets distributed
     var date = new Date();
@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
     // Distribute the new/incoming message to all connected users.
     // {from: msg.from, text: msg.text, createdAt: date.getTime()}
     io.emit("newMessage", generateMessage(msg.from, msg.text));
-
+    callback("AckBack");
     // Distribute to all but the receiving socket the newly received message.
     // socket.broadcast.emit("newMessage", {
     //   from: msg.from,
