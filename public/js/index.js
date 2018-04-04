@@ -23,6 +23,17 @@ socket.on("disconnect", function () {
   console.log("Just got disconnected from the server ...")
 });
 
+socket.on("newLocationMessage", function(msg) {
+  var li = jQuery("<li></li>");
+  var a = jQuery("<a target=_blank>my current location</a>");
+
+  li.text(`${msg.from}: `);
+  a.attr("href", msg.url);
+  li.append(a);
+
+  jQuery("#messages").append(li);
+});
+
 jQuery("#message-form").on("submit", function(e) {
   e.preventDefault();
 
@@ -51,6 +62,7 @@ locationButton.on("click", function() {
     alert("Unable to fetch location")
   });
 });
+
 
 // socket.emit("createMessage", {
 //   from: "Mary's Lamb",

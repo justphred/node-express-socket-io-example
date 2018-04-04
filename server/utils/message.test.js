@@ -12,6 +12,22 @@ describe("generateMessage", () => {
       from: from,
       text: text
     });
+  });
+});
 
+describe("generateLocationMessage", () => {
+  it("should generate correct location message object", () => {
+    // from: from,
+    // url: `https://www.google.com/maps?q=${lat},${long}`,
+    var from = "Peter Piper";
+    var lat = 3;
+    var long = 5;
+    var message = generateLocationMessage(from, lat, long);
+
+    expect(message.createdAt).toBeA("number");
+    expect(message).toInclude({
+      from: from,
+      text: url
+    });
   });
 });
