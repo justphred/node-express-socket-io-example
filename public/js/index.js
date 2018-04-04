@@ -34,6 +34,24 @@ jQuery("#message-form").on("submit", function(e) {
   );
 });
 
+var locationButton = jQuery("#send-location");
+
+locationButton.on("click", function() {
+  if(!navigator.geolocation) {
+    return alert("Geolocation is not supported by your browser");
+  }
+
+  navigator.geolocation.getCurrentPosition(function (position) {
+    // console.log(position);
+    socket.emit("createLocationMessage", {
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude
+    });
+  }, function () {
+    alert("Unable to fetch location")
+  });
+});
+
 // socket.emit("createMessage", {
 //   from: "Mary's Lamb",
 //   text: "Hey, my fleece is white as snow!"
