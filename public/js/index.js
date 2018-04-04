@@ -11,17 +11,32 @@ socket.on("connect", function () {
 
 });
 
-socket.on("newMessage", function(email) {
-  console.log("New message was received: ", email);
+socket.on("newMessage", function(msg) {
+  console.log("New message was received: ", msg);
+  var li = jQuery("<li></li>");
+
+  li.text(`${msg.from}: ${msg.text}`);
+  jQuery("#messages").append(li);
 });
 
 socket.on("disconnect", function () {
   console.log("Just got disconnected from the server ...")
 });
 
-socket.emit("createMessage", {
-  to: "Mary's Lamb",
-  text: "Hey, my fleece is white as snow!"
-}, function (serverResp) {
-  console.log("Message Ack'd by Server:", serverResp);
+jQuery("#message-form").on("submit", function(e) {
+  e.preventDefault();
+
+  socket.emit("createMessage", {
+    from: "User",
+    text: jQuery("[name=message]").val()
+    }, function () {
+    }
+  );
 });
+
+// socket.emit("createMessage", {
+//   from: "Mary's Lamb",
+//   text: "Hey, my fleece is white as snow!"
+// }, function (serverResp) {
+//   console.log("Message Ack'd by Server:", serverResp);
+// });

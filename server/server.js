@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
     // {from: msg.from, text: msg.text, createdAt: date.getTime()}
     io.emit("newMessage", generateMessage(msg.from, msg.text));
     callback("AckBack");
+    
     // Distribute to all but the receiving socket the newly received message.
     // socket.broadcast.emit("newMessage", {
     //   from: msg.from,
