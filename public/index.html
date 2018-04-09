@@ -15,17 +15,16 @@
   </div>
   <div class="chat__main">
     <ol id="messages" class="chat__messages"> </ol>
+
     <div class="chat__footer">
       <form id="message-form">
-        <input name="message" type="text" placeholder="Type message here"/>
+        <input name="message" type="text" placeholder="Type message here" autofocus autocomplete="off"/>
         <button>Send</button>
       </form>
       <button id="send-location">Send Location</button>
     </div>
 
   </div>
-
-
 
 <!-- ====================================================================== -->
   <script src="/socket.io/socket.io.js"></script>

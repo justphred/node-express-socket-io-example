@@ -30,35 +30,39 @@ socket.on("newLocationMessage", function(msg) {
   li.text(`${msg.from}: `);
   a.attr("href", msg.url);
   li.append(a);
-
   jQuery("#messages").append(li);
 });
 
 jQuery("#message-form").on("submit", function(e) {
   e.preventDefault();
-
+  var msgTextInput = jQuery("[name=message]");
   socket.emit("createMessage", {
     from: "User",
-    text: jQuery("[name=message]").val()
+    text: msgTextInput.val()
     }, function () {
+      // This is the "acknowledgement callback function"
+      // I think it gets called when the the server actually sends and ACK
+      // Clear the text input box after posting the message contained therein
+      msgTextInput.val("");
     }
   );
 });
 
 var locationButton = jQuery("#send-location");
-
 locationButton.on("click", function() {
   if(!navigator.geolocation) {
     return alert("Geolocation is not supported by your browser");
   }
-
+  locationButton.attr("disabled", "disabled").text("Sending Location");
   navigator.geolocation.getCurrentPosition(function (position) {
     // console.log(position);
+    locationButton.removeAttr("disabled").text("Send Location");
     socket.emit("createLocationMessage", {
       latitude: position.coords.latitude,
       longitude: position.coords.longitude
     });
   }, function () {
+    locationButton.removeAttr("disabled").text("Send Location");
     alert("Unable to fetch location")
   });
 });
