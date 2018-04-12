@@ -13,11 +13,21 @@ socket.on("connect", function () {
 
 socket.on("newMessage", function(msg) {
   console.log("New message was received: ", msg);
-  var timeStamp = moment(msg.createdAt).format("h:mm a");
-  var li = jQuery("<li></li>");
-  li.text(`<${msg.from}> -${timeStamp}- ${msg.text}`);
 
-  jQuery("#messages").append(li);
+  var template = jQuery("#message-template").html();
+  var timeStamp = moment(msg.createdAt).format("h:mm a");
+  var html = Mustache.render(template, {
+    text: msg.text,
+    from: msg.from,
+    timestamp: timeStamp
+  });
+  jQuery("#messages").append(html);
+
+  // var timeStamp = moment(msg.createdAt).format("h:mm a");
+  // var li = jQuery("<li></li>");
+  // li.text(`<${msg.from}> -${timeStamp}- ${msg.text}`);
+  //
+  // jQuery("#messages").append(li);
 });
 
 socket.on("disconnect", function () {
