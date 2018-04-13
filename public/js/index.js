@@ -30,19 +30,32 @@ socket.on("newMessage", function(msg) {
   // jQuery("#messages").append(li);
 });
 
-socket.on("disconnect", function () {
-  console.log("Just got disconnected from the server ...")
+
+// socket.on("newLocationMessage", function(msg) {
+//   var timeStamp = moment(msg.createdAt).format("h:mm a");
+//   var li = jQuery("<li></li>");
+//   var a = jQuery("<a target=_blank>my current location</a>");
+//
+//   li.text(`<${msg.from}> -${timeStamp}- `);
+//   a.attr("href", msg.url);
+//   li.append(a);
+//   jQuery("#messages").append(li);
+// });
+socket.on("newLocationMessage", function(msg) {
+  var template = jQuery("#location-message-template").html();
+  var timeStamp = moment(msg.createdAt).format("h:mm a");
+  var html = Mustache.render(template, {
+    timestamp: timeStamp,
+    from: msg.from,
+    url: msg.url
+  });
+
+  jQuery("#messages").append(html);
 });
 
-socket.on("newLocationMessage", function(msg) {
-  var timeStamp = moment(msg.createdAt).format("h:mm a");
-  var li = jQuery("<li></li>");
-  var a = jQuery("<a target=_blank>my current location</a>");
 
-  li.text(`<${msg.from}> -${timeStamp}- `);
-  a.attr("href", msg.url);
-  li.append(a);
-  jQuery("#messages").append(li);
+socket.on("disconnect", function () {
+  console.log("Just got disconnected from the server ...")
 });
 
 jQuery("#message-form").on("submit", function(e) {
