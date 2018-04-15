@@ -10,6 +10,7 @@ var server = http.createServer(app);
 var io = socketIO(server);
 
 const {generateMessage, generateLocationMessage} = require("./utils/message.js");
+const {isRealString} = require("./utils/validation.js");
 
 app.use(express.static(publicPath));
 
@@ -23,6 +24,12 @@ io.on("connection", (socket) => {
   // Let (other) connected users know that someone just joined the chatter.
   // {from: "Admin", text: "Someone just joined the chatter ...", createdAt: new Date().getTime()}
   socket.broadcast.emit("newMessage", generateMessage("Admin", "Someone just joined the chatter ..."));
+
+  socket.on("join", (params, callback) => {
+    if (!isRealString(params.name) || !isRealString(params.room)) {
+      callback("Name and room name are required");
+    }
+  });
 
   // From user to server ... "here's a new message to distribute to others"
   socket.on("createMessage", (msg, callback) => {

@@ -17,17 +17,20 @@ function scrollToBottom () {
     messages.scrollTop(scrollHeight);
   }
 
-} // End function scrollToBottom () {
+} // End function scrollToBottom () {}
 
 socket.on("connect", function () {
   console.log("Just connected to the server ...");
-
-  // socket.emit("createMessage", {
-  //   to: "Mary's Lamb",
-  //   text: "Hey, my fleece is white as snow!"
-  // });
-
-});
+  var params = jQuery.deparam(window.location.search);
+  socket.emit("join", params, function (err) {
+    if(err){
+      alert(err);
+      window.location.href = "/";
+    } else {
+      console.log("No error in submitting join form"); 
+    }
+  });
+}); // End socket.on("connect", function () {}
 
 socket.on("newMessage", function(msg) {
   console.log("New message was received: ", msg);
